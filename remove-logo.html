@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logo Kaldırma Aracı</title>
+  <style>
+    :root {
+      --bg:    #141414;
+      --bg2:   #1e1e1e;
+      --bg3:   #2a2a2a;
+      --red:   #e50914;
+      --white: #fff;
+      --gray:  #b3b3b3;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+      gap: 1.5rem;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--red);
+      text-transform: uppercase;
+    }
+
+    p.sub {
+      font-size: 0.85rem;
+      color: var(--gray);
+      text-align: center;
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    /* ── Upload area ── */
+    #upload-area {
+      width: 100%;
+      max-width: 600px;
+      border: 2px dashed rgba(229,9,20,0.45);
+      border-radius: 10px;
+      padding: 2.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: rgba(229,9,20,0.05);
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+
+    #upload-area:hover,
+    #upload-area.drag-over {
+      border-color: var(--red);
+      background: rgba(229,9,20,0.1);
+      color: var(--white);
+    }
+
+    #upload-area .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+
+    #file-input { display: none; }
+
+    /* ── Controls ── */
+    #controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      background: var(--bg2);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 0.9rem 1.5rem;
+      width: 100%;
+      max-width: 760px;
+    }
+
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      color: var(--gray);
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--bg3);
+      outline: none;
+      width: 100px;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--red);
+      cursor: pointer;
+    }
+
+    #brush-preview {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(229,9,20,0.5);
+      border: 2px solid var(--red);
+      flex-shrink: 0;
+    }
+
+    button {
+      background: var(--bg3);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--white);
+      padding: 0.45rem 1rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    button:hover { background: #3a3a3a; border-color: rgba(255,255,255,0.25); }
+
+    #download-btn {
+      background: var(--red);
+      border-color: var(--red);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    #download-btn:hover { background: #b20710; }
+    #download-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── Canvas wrapper ── */
+    #canvas-wrap {
+      position: relative;
+      display: none;
+      max-width: 100%;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    }
+
+    #canvas {
+      display: block;
+      max-width: 100%;
+      cursor: crosshair;
+    }
+
+    /* Custom cursor indicator */
+    #cursor-ring {
+      position: fixed;
+      border-radius: 50%;
+      border: 2px solid rgba(229,9,20,0.8);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
+
+    .hint {
+      font-size: 0.75rem;
+      color: #555;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🖌 Logo Kaldırma Aracı</h1>
+  <p class="sub">
+    Fotoğrafı yükle, logonun üzerini fırçayla boya — fırça çevresindeki piksellerden örnekleme yaparak logoyu kaldırır.
+    Bitince <strong>İndir</strong>'e bas.
+  </p>
+
+  <!-- Upload -->
+  <div id="upload-area">
+    <div class="icon">📂</div>
+    <div>Fotoğrafı buraya sürükle veya tıkla</div>
+    <div style="font-size:0.75rem; margin-top:0.3rem; color:#555">JPG · PNG · WEBP</div>
+    <input type="file" id="file-input" accept="image/*" />
+  </div>
+
+  <!-- Controls -->
+  <div id="controls">
+    <div class="ctrl-group">
+      <span>Fırça:</span>
+      <div id="brush-preview"></div>
+      <input type="range" id="brush-size" min="5" max="120" value="22" />
+      <span id="brush-label">22px</span>
+    </div>
+
+    <div class="ctrl-group">
+      <span>Güç:</span>
+      <input type="range" id="heal-strength" min="1" max="5" value="3" />
+      <span id="strength-label">3</span>
+    </div>
+
+    <button id="undo-btn">↩ Geri Al</button>
+    <button id="reset-btn">🗑 Sıfırla</button>
+    <button id="download-btn" disabled>⬇ İndir (PNG)</button>
+  </div>
+
+  <!-- Canvas -->
+  <div id="canvas-wrap">
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <p class="hint" id="hint-text" style="display:none">
+    Sol tık basılı tutarak logonun üzerini boya ✦ Her fırça darbesi geri alınabilir
+  </p>
+
+  <!-- Cursor ring -->
+  <div id="cursor-ring"></div>
+
+<script>
+/* ── State ─────────────────────────────────────────── */
+const canvas     = document.getElementById("canvas");
+const ctx        = canvas.getContext("2d", { willReadFrequently: true });
+const cursorRing = document.getElementById("cursor-ring");
+const canvasWrap = document.getElementById("canvas-wrap");
+const hintText   = document.getElementById("hint-text");
+
+let isDrawing    = false;
+let brushSize    = 22;
+let healStrength = 3;
+let history      = [];      // undo stack (ImageData snapshots)
+let originalImg  = null;    // HTMLImageElement
+let scale        = 1;       // display scale
+
+/* ── File Upload ───────────────────────────────────── */
+const uploadArea = document.getElementById("upload-area");
+const fileInput  = document.getElementById("file-input");
+
+uploadArea.addEventListener("click", () => fileInput.click());
+
+uploadArea.addEventListener("dragover", e => {
+  e.preventDefault();
+  uploadArea.classList.add("drag-over");
+});
+
+uploadArea.addEventListener("dragleave", () => uploadArea.classList.remove("drag-over"));
+
+uploadArea.addEventListener("drop", e => {
+  e.preventDefault();
+  uploadArea.classList.remove("drag-over");
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith("image/")) loadImage(file);
+});
+
+fileInput.addEventListener("change", e => {
+  if (e.target.files[0]) loadImage(e.target.files[0]);
+});
+
+function loadImage(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      originalImg = img;
+      history     = [];
+
+      // Max display width 760px, keep aspect ratio
+      const maxW = Math.min(760, window.innerWidth - 32);
+      scale = img.width > maxW ? maxW / img.width : 1;
+
+      canvas.width  = img.width;
+      canvas.height = img.height;
+      canvas.style.width  = Math.round(img.width  * scale) + "px";
+      canvas.style.height = Math.round(img.height * scale) + "px";
+
+      ctx.drawImage(img, 0, 0);
+      saveHistory();
+
+      canvasWrap.style.display = "block";
+      hintText.style.display   = "block";
+      uploadArea.style.display = "none";
+      document.getElementById("download-btn").disabled = false;
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ── Controls ──────────────────────────────────────── */
+const brushRange    = document.getElementById("brush-size");
+const strengthRange = document.getElementById("heal-strength");
+const brushLabel    = document.getElementById("brush-label");
+const strengthLabel = document.getElementById("strength-label");
+const brushPreview  = document.getElementById("brush-preview");
+
+brushRange.addEventListener("input", () => {
+  brushSize = parseInt(brushRange.value);
+  brushLabel.textContent = brushSize + "px";
+  const d = Math.min(brushSize * scale * 2, 48);
+  brushPreview.style.width  = d + "px";
+  brushPreview.style.height = d + "px";
+  cursorRing.style.width    = Math.round(brushSize * scale * 2) + "px";
+  cursorRing.style.height   = Math.round(brushSize * scale * 2) + "px";
+});
+
+strengthRange.addEventListener("input", () => {
+  healStrength = parseInt(strengthRange.value);
+  strengthLabel.textContent = healStrength;
+});
+
+document.getElementById("undo-btn").addEventListener("click", undo);
+document.getElementById("reset-btn").addEventListener("click", reset);
+document.getElementById("download-btn").addEventListener("click", download);
+
+/* ── Canvas Mouse / Touch ──────────────────────────── */
+canvas.addEventListener("mousedown",  e => { isDrawing = true; saveHistory(); paint(e); });
+canvas.addEventListener("mousemove",  e => { moveCursor(e); if (isDrawing) paint(e); });
+canvas.addEventListener("mouseup",    ()  => { isDrawing = false; });
+canvas.addEventListener("mouseleave", ()  => { isDrawing = false; hideCursor(); });
+canvas.addEventListener("mouseenter", ()  => showCursor());
+
+// Touch support
+canvas.addEventListener("touchstart",  e => { e.preventDefault(); isDrawing = true; saveHistory(); paint(e.touches[0]); }, { passive: false });
+canvas.addEventListener("touchmove",   e => { e.preventDefault(); if (isDrawing) paint(e.touches[0]); }, { passive: false });
+canvas.addEventListener("touchend",    ()  => { isDrawing = false; });
+
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: Math.round((e.clientX - rect.left) / scale),
+    y: Math.round((e.clientY - rect.top)  / scale)
+  };
+}
+
+/* ── Heal Brush ────────────────────────────────────── */
+function paint(e) {
+  const { x, y } = getPos(e);
+  heal(x, y, brushSize, healStrength);
+}
+
+function heal(cx, cy, radius, passes) {
+  for (let p = 0; p < passes; p++) {
+    const imgData = ctx.getImageData(
+      Math.max(0, cx - radius - 10),
+      Math.max(0, cy - radius - 10),
+      Math.min(canvas.width,  radius * 2 + 20),
+      Math.min(canvas.height, radius * 2 + 20)
+    );
+
+    const d     = imgData.data;
+    const w     = imgData.width;
+    const h     = imgData.height;
+    const offX  = Math.max(0, cx - radius - 10);
+    const offY  = Math.max(0, cy - radius - 10);
+
+    // For each pixel inside the circle
+    for (let dy = -radius; dy <= radius; dy++) {
+      for (let dx = -radius; dx <= radius; dx++) {
+        if (dx * dx + dy * dy > radius * radius) continue;
+
+        const px = cx + dx - offX;
+        const py = cy + dy - offY;
+        if (px < 0 || py < 0 || px >= w || py >= h) continue;
+
+        // Sample ring outside radius (r+2 to r+12)
+        const inner = radius + 2;
+        const outer = radius + 14;
+
+        let rS = 0, gS = 0, bS = 0, n = 0;
+
+        for (let sy = -outer; sy <= outer; sy++) {
+          for (let sx = -outer; sx <= outer; sx++) {
+            const dist2 = sx * sx + sy * sy;
+            if (dist2 < inner * inner || dist2 > outer * outer) continue;
+
+            const spx = cx + sx - offX;
+            const spy = cy + sy - offY;
+            if (spx < 0 || spy < 0 || spx >= w || spy >= h) continue;
+
+            const idx = (spy * w + spx) * 4;
+            rS += d[idx];
+            gS += d[idx + 1];
+            bS += d[idx + 2];
+            n++;
+          }
+        }
+
+        if (n === 0) continue;
+
+        const idx = (py * w + px) * 4;
+        // Blend: 70% sampled average, 30% original (softer edge)
+        const t   = 0.7;
+        d[idx]     = Math.round(d[idx]     * (1 - t) + (rS / n) * t);
+        d[idx + 1] = Math.round(d[idx + 1] * (1 - t) + (gS / n) * t);
+        d[idx + 2] = Math.round(d[idx + 2] * (1 - t) + (bS / n) * t);
+      }
+    }
+
+    ctx.putImageData(imgData, offX, offY);
+  }
+}
+
+/* ── Undo / Reset ──────────────────────────────────── */
+function saveHistory() {
+  if (history.length > 30) history.shift(); // max 30 steps
+  history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+}
+
+function undo() {
+  if (history.length <= 1) return;
+  history.pop();
+  ctx.putImageData(history[history.length - 1], 0, 0);
+}
+
+function reset() {
+  if (!originalImg) return;
+  history = [];
+  ctx.drawImage(originalImg, 0, 0);
+  saveHistory();
+}
+
+/* ── Download ──────────────────────────────────────── */
+function download() {
+  // Get filename from file input
+  const name = (fileInput.files[0]?.name.replace(/\.[^.]+$/, "") || "photo") + "-temizlendi.png";
+  const a    = document.createElement("a");
+  a.href     = canvas.toDataURL("image/png");
+  a.download = name;
+  a.click();
+}
+
+/* ── Custom Cursor ─────────────────────────────────── */
+function showCursor() {
+  cursorRing.style.display = "block";
+  updateCursorSize();
+}
+
+function hideCursor() {
+  cursorRing.style.display = "none";
+}
+
+function moveCursor(e) {
+  cursorRing.style.left = e.clientX + "px";
+  cursorRing.style.top  = e.clientY + "px";
+}
+
+function updateCursorSize() {
+  const d = Math.round(brushSize * scale * 2);
+  cursorRing.style.width  = d + "px";
+  cursorRing.style.height = d + "px";
+}
+
+// Resize scale recalc
+window.addEventListener("resize", () => {
+  if (!originalImg) return;
+  const maxW = Math.min(760, window.innerWidth - 32);
+  scale = originalImg.width > maxW ? maxW / originalImg.width : 1;
+  canvas.style.width  = Math.round(originalImg.width  * scale) + "px";
+  canvas.style.height = Math.round(originalImg.height * scale) + "px";
+  updateCursorSize();
+}, { passive: true });
+</script>
+
+</body>
+</html>

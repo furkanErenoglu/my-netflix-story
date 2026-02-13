@@ -1,0 +1,80 @@
+{
+  "couple": {
+    "name1":     "Furkan",
+    "name2":     "Derya",
+    "startDate": "2019-08-30",
+    "tagline":   "Her gün seninle daha güzel",
+    "playlist": [
+      "music/Ajda Pekkan - Haykıracak Nefesim Kalmasa Bile (Official Audio) [G81e4utp3Mo].mp3",
+      "music/Can Ozan feat. Damla Eker - Öyle kolay aşık olmam [pbeiDLdeaYs].mp3",
+      "music/Cem Adrian & Hande Mehan - Sen Benim Şarkılarımsın (Official Audio) [brRnhthvnKs].mp3",
+      "music/Dolu Kadehi Ters Tut - Dilerim Ki (Official Audio) [aDju79MtUR8].mp3",
+      "music/Nerdeysen [GnJjJDlk7_g].mp3",
+      "music/Nilüfer - Son Arzum (Official Audio) [gwtiHjOixDQ].mp3",
+      "music/Seni Her Gördüğümde [gtNUnb8UeO4].mp3",
+      "music/teoman - Sevdim Seni Bir Kere [C54MOn6n_Ao].mp3"
+    ]
+  },
+  "cards": [
+    {
+      "id":          1,
+      "title":       "İlk Aşkımız",
+      "category":    "Başlangıç",
+      "date":        "30 Ağustos 2019",
+      "description": "Her şeyin başladığı o muhteşem gün… Seni ilk gördüğümde dünya sanki durdu. Gülüşün, bakışların — hepsini ilk andan aklıma kazıdım.\n\nO an bilmiyordum ama bu buluşma hayatımı sonsuza kadar değiştirecekti.",
+      "image":       "images/first-meet.jpg",
+      "emoji":       "💫",
+      "gradient":    "linear-gradient(145deg, #1a0505 0%, #3a0a0a 100%)"
+    },
+    {
+      "id":          2,
+      "title":       "Anılarımız",
+      "category":    "Özel Anlar",
+      "date":        "",
+      "description": "Birlikte yaşadığımız her an kalbimde özel bir yerde saklı.\n\nKahkahalarımız, sarılmalarımız, birlikte izlediğimiz filmler… Her anı seninle güzel.",
+      "image":       "images/memories.jpg",
+      "emoji":       "📸",
+      "gradient":    "linear-gradient(145deg, #050515 0%, #0a0a3a 100%)"
+    },
+    {
+      "id":          3,
+      "title":       "Gezilerimiz",
+      "category":    "Macera",
+      "date":        "",
+      "description": "Seninle yolculuk etmek hayat güzelliği.\n\nHer gittiğimiz yer seninle anlam kazanıyor. Hangi şehirde, hangi kıyıda olursa olsun — sen yanımdayken her yer cennet.",
+      "image":       "images/travels.jpg",
+      "emoji":       "✈️",
+      "gradient":    "linear-gradient(145deg, #051505 0%, #0a3a0a 100%)"
+    },
+    {
+      "id":          4,
+      "title":       "Sana Mektubum",
+      "category":    "Sevgi Dolu",
+      "date":        "",
+      "description": "Sevgili Derya,\n\nBu dünyada seni tanıdığım için kendimi en şanslı insan hissediyorum. Her sabah seni düşünerek uyanmak, her akşam seninle konuşmak — bunlar hayatımın en güzel anları.\n\nSeni seviyorum. Her geçen gün biraz daha.\n\nSonsuza kadar seninle,\nFurkan ❤️",
+      "image":       "images/letter.jpg",
+      "emoji":       "💌",
+      "gradient":    "linear-gradient(145deg, #150510 0%, #2a0a25 100%)"
+    },
+    {
+      "id":          5,
+      "title":       "Doğum Günün",
+      "category":    "Özel Gün",
+      "date":        "17 Eylül",
+      "description": "17 Eylül — seninle aynı dünyayı paylaşmak ne büyük şans.\n\nDerya, bu dünyaya geldiğin gün benim için de bir mucize başladı. Yıllar geçtikçe daha da güzelleşiyorsun — içinden, dışından, her yönünle.\n\nUmarım bu özel günün güzel geçer. Canım benim. ❤️",
+      "image":       "images/birthday.jpg",
+      "emoji":       "🎂",
+      "gradient":    "linear-gradient(145deg, #150015 0%, #3a003a 100%)"
+    },
+    {
+      "id":          6,
+      "title":       "Sürpriz",
+      "category":    "Özel",
+      "date":        "",
+      "description": "🎉 Mutlu Yıllar Sevgilim!\n\nBu sürpriz sadece sana özel… Seni çok seviyorum ve her zaman seveceğim.\n\nSeninle geçirdiğim her an paha biçilemez. İşte bu yüzden bu küçük dünyayı senin için yarattım. ❤️",
+      "image":       "images/surprise.jpg",
+      "emoji":       "🎁",
+      "gradient":    "linear-gradient(145deg, #150a00 0%, #3a1a00 100%)"
+    }
+  ]
+}

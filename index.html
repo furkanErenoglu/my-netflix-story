@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bizim Hikayemiz ❤️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Yükleme Ekranı ─────────────────────────────────── -->
+  <div id="loading-screen">
+    <div class="loading-heart">❤</div>
+  </div>
+
+  <!-- ── Yüzen Kalpler (Canvas) ─────────────────────────── -->
+  <canvas id="hearts-canvas"></canvas>
+
+  <!-- ── Arka Plan Müziği ──────────────────────────────── -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="music/love-song.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- ── Navigasyon ────────────────────────────────────── -->
+  <nav id="navbar">
+    <div class="nav-logo">
+      <span class="nav-heart">❤</span>
+      <span class="nav-brand">BİZİM HİKAYEMİZ</span>
+    </div>
+    <button id="music-btn" class="music-btn" title="Müziği aç/kapat">
+      <div class="disc-wrap">
+        <div class="disc" id="disc"></div>
+      </div>
+      <span class="music-label" id="music-icon">Müzik</span>
+    </button>
+  </nav>
+
+  <!-- ── Hero ──────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <span class="hero-badge">💕 Sevgililer Günü 2026</span>
+      <h1 class="hero-title" id="hero-title">Furkan ❤️ Ayşe</h1>
+      <p class="hero-tagline" id="hero-tagline">Her gün seninle daha güzel</p>
+
+      <div class="counter-box">
+        <div class="counter-num" id="day-count">0</div>
+        <div class="counter-label">gündür birlikteyiz ❤️</div>
+      </div>
+
+      <button class="hero-cta" id="scroll-btn">Hikayemizi Keşfet ↓</button>
+    </div>
+  </section>
+
+  <!-- ── Kartlar ────────────────────────────────────────── -->
+  <main class="main-content">
+    <section class="cards-section" id="cards-section">
+      <div class="section-header">
+        <h2 class="section-title">Bölümlerimiz</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="cards-grid" id="cards-grid">
+        <!-- JS tarafından doldurulacak -->
+      </div>
+    </section>
+  </main>
+
+  <!-- ── Modal ─────────────────────────────────────────── -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box" id="modal-box">
+      <button class="modal-close-x" id="modal-close-x" aria-label="Kapat">✕</button>
+      <div class="modal-layout">
+
+        <!-- Sol: Görsel -->
+        <div class="modal-visual" id="modal-visual">
+          <div class="modal-emoji-bg" id="modal-emoji-bg"></div>
+          <img id="modal-img" src="" alt="" class="modal-img" />
+          <div class="modal-img-fade"></div>
+        </div>
+
+        <!-- Sağ: Bilgi -->
+        <div class="modal-info">
+          <span class="modal-category" id="modal-category"></span>
+          <h2 class="modal-heading" id="modal-heading"></h2>
+          <p class="modal-date" id="modal-date"></p>
+          <div class="modal-divider"></div>
+          <p class="modal-description" id="modal-description"></p>
+          <button class="modal-close-btn" id="modal-close-btn">Kapat ✕</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Footer ────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-hearts">❤️ ❤️ ❤️</div>
+    <p class="footer-text">Made with ❤️ · <span id="footer-names">Furkan &amp; Ayşe</span></p>
+    <p class="footer-sub">Bizim Hikayemiz · 2026</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
